@@ -1,0 +1,57 @@
+@media (min-width: 576px) {
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (min-width: 992px) {
+  h1 {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  h1 {
+    font-size: 4rem;
+  }
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  /* justify-content: center; */
+  align-items: center;
+  align-content: center;
+  font-family: Roboto Mono, serif;
+  background: #0c1117;
+  margin: 0;
+}
+
+.flex {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+}
+
+
+h1 {
+  color: #d3d3d3;
+  margin: 20vmax;
+  /* margin: 75vh;  vh steht für viewbox height !!!!  IST NOCH NICHT FERTIG */
+}
+h2, h3 {
+  color: #d3d3d3 ;
+}
+
