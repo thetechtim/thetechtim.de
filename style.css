@@ -22,36 +22,62 @@
   }
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
   /* justify-content: center; */
-  align-items: center;
-  align-content: center;
   font-family: Roboto Mono, serif;
   background: #0c1117;
   margin: 0;
 }
 
-.flex {
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  align-content: center;
+.rounded {
+  border: 2px solid black;
+  border-radius: 15px;
+
 }
 
+.text-background {
+  background-color: rgb(10, 10, 10);
+  /* color: aliceblue; */
+}
 
-h1 {
+.text {
+  color: aliceblue;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.view {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.title {
   color: #d3d3d3;
-  margin: 20vmax;
+  /* margin: min(5em, 100%); */
+  margin-top: 25%;
+  margin-bottom: 25%;
+  /* margin: 20vmax; */
   /* margin: 75vh;  vh steht für viewbox height !!!!  IST NOCH NICHT FERTIG */
 }
-h2, h3 {
-  color: #d3d3d3 ;
+
+h2,
+h3 {
+  color: #d3d3d3;
 }
 
+.center {
+  align-content: center;
+  justify-content: center;
+}
