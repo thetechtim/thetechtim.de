@@ -2,45 +2,144 @@
 <html lang="de">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>thetechtim.de</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="contents.css">
-    <link rel="stylesheet" href="animation.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>thetechtim.de</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="./github_thetechtim.png">
 </head>
 
 <body>
-    <main>
-        <h1 class="title flex">
-            < thetechtim Studios />
-        </h1>
+  <div class="toggle">Toggle Mode</div>
 
-        <a href="./scroll_animation.html">Scroll</a>
-        <h3 class="autoShow">Test</h3>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>
+        < thetechtim.de />
+      </h1>
+    </div>
+  </section>
 
-        <div class="view">
-            <div class="block">
-                <div class="rounded text-background">
-                    <div class="flex">
-                        <div class="text">
-                            <h1>Hi</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="block center">
-            <a href="https://store.steampowered.com/"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Steam_2016_logo_black.svg/330px-Steam_2016_logo_black.svg.png" alt="Steam Logo"></a>
-            </div>
-        </div>
-    </main>
+  <!-- CONTENT -->
+  <section class="content">
+    <h2>
+      Willkomen auf thetechtim.de !
+    </h2>
 
-    <footer class="text text-background">
-        <hr>
-        Author: thetechtim <br>
-        &copy; copyright reserved
+    <div class="card" data-text="Inhalt 1">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Steam_2016_logo_black.svg/330px-Steam_2016_logo_black.svg.png"
+        alt="Bild">
+
+      <!-- <strong>Steam</strong> -->
+
+
+      <a class="card-link" href="https://example.com" target="_blank">
+        Mehr erfahren →
+      </a>
+    </div>
+
+    <!-- <div class="container">
+      <div class="card" data-text="Inhalt 2"><strong>Box 2</strong></div>
+    </div>
+  </section> -->
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+
+    <footer>
+      <hr>
+      Author: thetechtim <br>
+      &copy; copyright reserved
+      <strong>
         <a href="mailto:info@thetechtim.de">info@thetechtim.de</a>
+      </strong>
+      
     </footer>
 </body>
+
+<script>
+  const heroInner = document.querySelector('.hero-inner');
+  const toggle = document.querySelector('.toggle');
+  const modal = document.getElementById('modal');
+  const modalContent = document.getElementById('modalContent');
+
+  let scrollY = 0;
+  let targetY = 0;
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function render() {
+    scrollY += (targetY - scrollY) * 0.12;
+
+    const maxScroll = 300;
+    let progress = Math.min(scrollY / maxScroll, 1);
+    progress = easeOutCubic(progress);
+
+    const isMobile = window.innerWidth < 600;
+    const scaleFactor = isMobile ? 0.25 : 0.4;
+
+    const scale = 1 - (scaleFactor * progress);
+    const translateY = -50 - (100 * progress);
+
+    heroInner.style.transform =
+      `translate(-50%, ${translateY}%) scale(${scale})`;
+
+    toggle.classList.toggle('visible', scrollY > 100);
+
+    requestAnimationFrame(render);
+  }
+
+  window.addEventListener('scroll', () => {
+    targetY = window.scrollY;
+  }, { passive: true });
+
+  requestAnimationFrame(render);
+
+  /* DARK MODE */
+  toggle.addEventListener('click', () => {
+    document.body.classList.toggle('light');
+  });
+
+  /* CARDS */
+  document.querySelectorAll('.card').forEach(card => {
+
+    card.addEventListener('click', function (e) {
+
+      if (e.target.closest('.card-link')) return;
+
+      const rect = card.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+
+      const size = Math.max(rect.width, rect.height);
+
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+
+      card.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+
+      modalContent.innerHTML = `
+          <h2>${card.querySelector('strong').innerText}</h2>
+          <p>${card.dataset.text}</p>
+        `;
+
+      modal.classList.add('active');
+    });
+
+  });
+
+  modal.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+
+</script>
 
 </html>
