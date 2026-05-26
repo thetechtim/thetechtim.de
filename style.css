@@ -20,6 +20,10 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 /* Toggle */
 .toggle {
   position: fixed;
