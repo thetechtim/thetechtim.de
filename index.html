@@ -469,7 +469,7 @@
     .getElementById('saveCard')
     .addEventListener('click', () => {
 
-      const index = cardSelect.value;
+      const index = Number(cardSelect.value);
 
       cardsData[index] = {
         icon: cardIcon.value,
@@ -486,7 +486,11 @@
 
       renderCards();
 
+      /* OPTIONS NEU LADEN */
       loadCardOptions();
+
+      /* AKTUELLE BOX WIEDER AUSWÄHLEN */
+      cardSelect.value = index;
 
       /* ADMIN PANEL SCHLIESSEN */
       adminPanel.classList.remove('active');
