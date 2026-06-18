@@ -180,30 +180,7 @@
 
   /* CARD DATEN */
 
-  const defaultCards = [
-    {
-      icon: "📦",
-      title: "GitHub",
-      text: "Mein GitHub Profil",
-      link: "https://github.com",
-      image: ""
-    },
-    {
-      icon: "🚀",
-      title: "Projekte",
-      text: "Meine aktuellen Projekte",
-      link: "#",
-      image: ""
-    }
-  ];
-
-  let cardsData =
-    JSON.parse(
-      localStorage.getItem('cardsData')
-    ) || defaultCards;
-
-  const container =
-    document.querySelector('.container');
+  const defaultCards = [];
 
   /* RENDER CARDS */
 
@@ -428,7 +405,6 @@
         document.createElement('option');
 
       option.value = index;
-
       option.textContent =
         `${index + 1} - ${card.title}`;
 
@@ -436,7 +412,15 @@
 
     });
 
-    loadSelectedCard();
+    if (cardsData.length > 0) {
+      loadSelectedCard();
+    } else {
+      cardIcon.value = '';
+      cardTitle.value = '';
+      cardText.value = '';
+      cardLink.value = '';
+      cardImage.value = '';
+    }
 
   }
 
@@ -444,7 +428,9 @@
 
   function loadSelectedCard() {
 
-    const index = cardSelect.value;
+    if (cardsData.length === 0) return;
+
+    const index = Number(cardSelect.value);
 
     const data = cardsData[index];
 
@@ -458,12 +444,12 @@
 
   }
 
-  cardSelect.addEventListener(
-    'change',
-    loadSelectedCard
-  );
-
   /* SAVE */
+
+  if (cardsData.length === 0) {
+    alert('Erstelle zuerst eine Box.');
+    return;
+  }
 
   document
     .getElementById('saveCard')
