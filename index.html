@@ -24,527 +24,90 @@
     </div>
   </section>
 
-  <!-- CONTENT -->
-  <section class="content">
-
     <h2>
       Willkommen auf thetechtim.de !
     </h2>
 
-    <!-- CARDS -->
-    <div class="container"></div>
+    <footer>
+      <hr>
+      Author: thetechtim <br>
+      &copy; copyright reserved
+      <strong>
+        <a href="mailto:info@thetechtim.de">
+          info@thetechtim.de
+        </a>
+      </strong>
 
-  </section>
-
-  <!-- MODAL -->
-  <div class="modal" id="modal">
-    <div class="modal-content" id="modalContent"></div>
-  </div>
-
-  <!-- LOGIN -->
-  <div class="modal" id="loginModal">
-    <div class="modal-content">
-
-      <h2>Admin Login</h2>
-
-      <input id="username" placeholder="Benutzername">
-
-      <input id="password" type="password" placeholder="Passwort">
-
-      <button id="loginBtn">
-        Login
-      </button>
-
-    </div>
-  </div>
-
-  <!-- ADMIN PANEL -->
-  <div class="modal" id="adminPanel">
-    <div class="modal-content">
-
-      <h2>Admin Console</h2>
-
-      <select id="cardSelect"></select>
-
-      <input id="cardIcon" placeholder="Icon">
-
-      <input id="cardTitle" placeholder="Titel">
-
-      <textarea id="cardText" placeholder="Beschreibung"></textarea>
-
-      <input id="cardLink" placeholder="Link">
-
-      <input id="cardImage" placeholder="Bild URL">
-
-      <button id="saveCard">
-        Speichern
-      </button>
-
-    </div>
-  </div>
-
-  <footer>
-    <hr>
-
-    Author: thetechtim <br>
-
-    &copy; copyright reserved
-
-    <strong>
-      <a href="mailto:info@thetechtim.de">
-        info@thetechtim.de
-      </a>
-    </strong>
-
-  </footer>
+    </footer>
 
 </body>
 
-<script>
+  <script>
 
-  /* ELEMENTE */
+    const heroInner =
+      document.querySelector('.hero-inner');
 
-  const heroInner =
-    document.querySelector('.hero-inner');
+    const toggle =
+      document.querySelector('.toggle');
 
-  const toggle =
-    document.querySelector('.toggle');
+    let scrollY = 0;
+    let targetY = 0;
 
-  const modal =
-    document.getElementById('modal');
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
 
-  const modalContent =
-    document.getElementById('modalContent');
+    function render() {
 
-  /* NATIVE SCROLL SYSTEM */
+      scrollY +=
+        (targetY - scrollY) * 0.12;
 
-  let scrollY = 0;
-  let targetY = 0;
+      const maxScroll = 300;
 
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
+      let progress =
+        Math.min(scrollY / maxScroll, 1);
 
-  function render() {
+      progress =
+        easeOutCubic(progress);
 
-    scrollY +=
-      (targetY - scrollY) * 0.12;
+      const isMobile =
+        window.innerWidth < 600;
 
-    const maxScroll = 300;
+      const scaleFactor =
+        isMobile ? 0.25 : 0.4;
 
-    let progress =
-      Math.min(scrollY / maxScroll, 1);
+      const scale =
+        1 - (scaleFactor * progress);
 
-    progress =
-      easeOutCubic(progress);
+      const translateY =
+        -50 - (100 * progress);
 
-    const isMobile =
-      window.innerWidth < 600;
+      heroInner.style.transform =
+        `translate(-50%, ${translateY}%)
+         scale(${scale})`;
 
-    const scaleFactor =
-      isMobile ? 0.25 : 0.4;
+      toggle.classList.toggle(
+        'visible',
+        scrollY > 100
+      );
 
-    const scale =
-      1 - (scaleFactor * progress);
+      requestAnimationFrame(render);
+    }
 
-    const translateY =
-      -50 - (100 * progress);
-
-    heroInner.style.transform =
-      `translate(-50%, ${translateY}%)
-       scale(${scale})`;
-
-    toggle.classList.toggle(
-      'visible',
-      scrollY > 100
+    window.addEventListener(
+      'scroll',
+      () => {
+        targetY = window.scrollY;
+      },
+      { passive: true }
     );
 
     requestAnimationFrame(render);
-  }
 
-  window.addEventListener(
-    'scroll',
-    () => {
-      targetY = window.scrollY;
-    },
-    { passive: true }
-  );
-
-  requestAnimationFrame(render);
-
-  /* DARK MODE */
-
-  toggle.addEventListener('click', () => {
-    document.body.classList.toggle('light');
-  });
-
-  /* CARD DATEN */
-
-  const defaultCards = [];
-
-  /* RENDER CARDS */
-
-  function renderCards() {
-
-    container.innerHTML = '';
-
-    cardsData.forEach((data, index) => {
-
-      const card =
-        document.createElement('div');
-
-      card.classList.add('card');
-
-      card.dataset.id = index;
-
-      card.innerHTML = `
-      ${data.image
-          ? `<img src="${data.image}" alt="">`
-          : ''
-        }
-
-      <i>${data.icon}</i>
-
-      <strong>${data.title}</strong>
-
-      <p>${data.text}</p>
-
-      <a
-        class="card-link"
-        href="${data.link}"
-        target="_blank"
-      >
-        Mehr erfahren →
-      </a>
-    `;
-
-      card.dataset.text = data.text;
-
-      /* CARD CLICK */
-
-      card.addEventListener(
-        'click',
-        function (e) {
-
-          if (
-            e.target.closest('.card-link')
-          ) return;
-
-          const rect =
-            card.getBoundingClientRect();
-
-          const ripple =
-            document.createElement('span');
-
-          ripple.classList.add('ripple');
-
-          const size =
-            Math.max(rect.width, rect.height);
-
-          ripple.style.width =
-            ripple.style.height =
-            size + 'px';
-
-          ripple.style.left =
-            (e.clientX - rect.left - size / 2)
-            + 'px';
-
-          ripple.style.top =
-            (e.clientY - rect.top - size / 2)
-            + 'px';
-
-          card.appendChild(ripple);
-
-          setTimeout(
-            () => ripple.remove(),
-            600
-          );
-
-          modalContent.innerHTML = `
-          <h2>
-            ${data.title}
-          </h2>
-
-          <p>
-            ${data.text}
-          </p>
-        `;
-
-          modal.classList.add('active');
-        }
-      );
-
-      container.appendChild(card);
-
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
     });
 
-  }
-
-  renderCards();
-
-  /* MODAL */
-
-  modal.addEventListener('click', () => {
-    modal.classList.remove('active');
-  });
-
-  /* ADMIN */
-
-  const loginModal =
-    document.getElementById('loginModal');
-
-  const adminPanel =
-    document.getElementById('adminPanel');
-
-  const loginBtn =
-    document.getElementById('loginBtn');
-
-  const USERNAME = 'admin';
-  const PASSWORD = '1234';
-
-  /* ALT + A */
-
-  window.addEventListener(
-    'keydown',
-    (e) => {
-
-      if (
-        e.altKey &&
-        e.key.toLowerCase() === 'a'
-      ) {
-        loginModal.classList.add('active');
-      }
-
-    }
-  );
-
-  loginBtn.addEventListener(
-    'click',
-    () => {
-
-      const user =
-        document.getElementById('username').value;
-
-      const pass =
-        document.getElementById('password').value;
-
-      if (
-        user === USERNAME &&
-        pass === PASSWORD
-      ) {
-
-        loginModal.classList.remove('active');
-
-        adminPanel.classList.add('active');
-
-        loadCardOptions();
-
-      } else {
-
-        alert('Falsche Daten');
-
-      }
-
-    }
-  );
-
-  /* ADMIN PANEL */
-
-  const cardSelect =
-    document.getElementById('cardSelect');
-
-  const cardIcon =
-    document.getElementById('cardIcon');
-
-  const cardTitle =
-    document.getElementById('cardTitle');
-
-  const cardText =
-    document.getElementById('cardText');
-
-  const cardLink =
-    document.getElementById('cardLink');
-
-  const cardImage =
-    document.getElementById('cardImage');
-
-  /* BUTTONS ERSTELLEN */
-
-  const addButton =
-    document.createElement('button');
-
-  addButton.textContent =
-    'Neue Box hinzufügen';
-
-  adminPanel
-    .querySelector('.modal-content')
-    .appendChild(addButton);
-
-  const deleteButton =
-    document.createElement('button');
-
-  deleteButton.textContent =
-    'Ausgewählte Box löschen';
-
-  deleteButton.style.background =
-    '#d9534f';
-
-  adminPanel
-    .querySelector('.modal-content')
-    .appendChild(deleteButton);
-
-  /* OPTIONS */
-
-  function loadCardOptions() {
-
-    cardSelect.innerHTML = '';
-
-    cardsData.forEach((card, index) => {
-
-      const option =
-        document.createElement('option');
-
-      option.value = index;
-      option.textContent =
-        `${index + 1} - ${card.title}`;
-
-      cardSelect.appendChild(option);
-
-    });
-
-    if (cardsData.length > 0) {
-      loadSelectedCard();
-    } else {
-      cardIcon.value = '';
-      cardTitle.value = '';
-      cardText.value = '';
-      cardLink.value = '';
-      cardImage.value = '';
-    }
-
-  }
-
-  /* LOAD SELECTED */
-
-  function loadSelectedCard() {
-
-    if (cardsData.length === 0) return;
-
-    const index = Number(cardSelect.value);
-
-    const data = cardsData[index];
-
-    if (!data) return;
-
-    cardIcon.value = data.icon;
-    cardTitle.value = data.title;
-    cardText.value = data.text;
-    cardLink.value = data.link;
-    cardImage.value = data.image || '';
-
-  }
-
-  /* SAVE */
-
-  if (cardsData.length === 0) {
-    alert('Erstelle zuerst eine Box.');
-    return;
-  }
-
-  document
-    .getElementById('saveCard')
-    .addEventListener('click', () => {
-
-      const index = Number(cardSelect.value);
-
-      cardsData[index] = {
-        icon: cardIcon.value,
-        title: cardTitle.value,
-        text: cardText.value,
-        link: cardLink.value,
-        image: cardImage.value
-      };
-
-      localStorage.setItem(
-        'cardsData',
-        JSON.stringify(cardsData)
-      );
-
-      renderCards();
-
-      /* OPTIONS NEU LADEN */
-      loadCardOptions();
-
-      /* AKTUELLE BOX WIEDER AUSWÄHLEN */
-      cardSelect.value = index;
-
-      /* ADMIN PANEL SCHLIESSEN */
-      adminPanel.classList.remove('active');
-
-      alert('Gespeichert');
-
-    });
-
-  /* ADD CARD */
-
-  addButton.addEventListener(
-    'click',
-    () => {
-
-      cardsData.push({
-        icon: "✨",
-        title: "Neue Box",
-        text: "Beschreibung",
-        link: "#",
-        image: ""
-      });
-
-      localStorage.setItem(
-        'cardsData',
-        JSON.stringify(cardsData)
-      );
-
-      renderCards();
-
-      loadCardOptions();
-
-      cardSelect.value =
-        cardsData.length - 1;
-
-      loadSelectedCard();
-
-    }
-  );
-
-  /* DELETE CARD */
-
-  deleteButton.addEventListener(
-    'click',
-    () => {
-
-      const index =
-        Number(cardSelect.value);
-
-      if (
-        !confirm(
-          'Box wirklich löschen?'
-        )
-      ) return;
-
-      cardsData.splice(index, 1);
-
-      localStorage.setItem(
-        'cardsData',
-        JSON.stringify(cardsData)
-      );
-
-      renderCards();
-
-      loadCardOptions();
-
-    }
-  );
-
-</script>
+  </script>
 
 </html>
